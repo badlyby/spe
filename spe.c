@@ -20,6 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
 #include "spe.h"
 
 #ifndef SPE_RAMLessMode
@@ -168,22 +169,28 @@ void SPE_Receive_Byte(uint8_t byte)//串口接收一个字节调用一次本函�
 		switch(ridx)
 		{
 		case 0:
+			if(rcount >= SPE_MAX_PacketLength) return;
 			SPE_Rbuf[rcount] = (byte & 0x3F) << 2;
 			ridx = 1;
 			break;
 		case 1:
+			if(rcount >= SPE_MAX_PacketLength) return;
 			SPE_Rbuf[rcount] |= ((byte >> 4) & 0x03);
 			rcount++;
+			if(rcount >= SPE_MAX_PacketLength) return;
 			SPE_Rbuf[rcount] = (byte << 4) & 0xF0;
 			ridx = 2;
 			break;
 		case 2:
+			if(rcount >= SPE_MAX_PacketLength) return;
 			SPE_Rbuf[rcount] |= ((byte >> 2) & 0x0F);
 			rcount++;
+			if(rcount >= SPE_MAX_PacketLength) return;
 			SPE_Rbuf[rcount] = (byte << 6) & 0xC0;
 			ridx = 3;
 			break;
 		case 3:
+			if(rcount >= SPE_MAX_PacketLength) return;
 			SPE_Rbuf[rcount] |= (byte & 0x3F);
 			rcount++;
 			ridx = 0;
