@@ -27,19 +27,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define SPE_MAX_PacketLength	16	//设置每个数据包最大包含字节数
 	#define SPE_RAMLessMode				//低内存占用模式，为低端单片机设计,此模式时每次单片机串口发送一个字节
 
-	#if  defined ( __GNUC__ )
-		#ifndef __weak
-			#define __weak   __attribute__((weak))
-		#endif /* __weak */
-		#ifndef __packed
-			#define __packed __attribute__((__packed__))
-		#endif /* __packed */
-	#endif /* __GNUC__ */
-
-	//void SendByte(uint8_t byte)  串口发送一个字节，如果其他代码中未实例此函数，会执行测试代码
-	//void SPE_ProcessData(uint8_t *data, uint16_t length) 接收到数据处理，如果其他代码中未实例此函数，会执行测试代码
+	//void SendByte(uint8_t byte)  串口发送一个字节，需要在其他代码中实现
+	//void SPE_ProcessData(uint8_t *data, uint16_t length) 接收到数据处理，需要在其他代码中实现
 #ifndef SPE_RAMLessMode
-	//void SendBytes(uint8_t *bytes, uint16_t length) 串口发送多个字节，如果其他代码中未实例此函数，会执行测试代码，低内存占用模式时不可用
+	//void SendBytes(uint8_t *bytes, uint16_t length) 串口发送多个字节，需要在其他代码中实现，低内存占用模式时不可用
 #endif
 	void SPE_Start_Send(void);//数据包开始
 	void SPE_Byte_Send(uint8_t bits);//发送一个字节

@@ -31,27 +31,6 @@ volatile static uint8_t SPE_Rbuf[SPE_MAX_PacketLength];
 volatile static uint8_t SPE_SIndex = 4;
 volatile static uint8_t SPE_tmpbit = 0;
 
-__weak void SendByte(uint8_t byte)//测试代码 * 串口发送一个字节，如果其他代码中未实例此函数，会执行测试代码
-{
-	SPE_Receive_Byte(byte);
-}
-
-#ifndef SPE_RAMLessMode
-__weak void SendBytes(uint8_t *bytes, uint16_t length)//测试代码 * 串口发送多个字节，如果其他代码中未实例此函数，会执行测试代码，低内存占用模式时不可用
-{
-	printf("SendBytes\n");
-	SPE_Receive_Bytes(bytes, length);
-}
-#endif
-
-__weak void SPE_ProcessData(uint8_t *data, uint16_t length)//测试代码 * 接收到数据处理，如果其他代码中未实例此函数，会执行测试代码
-{
-	uint16_t i;
-	for(i=0;i<length;i++)
-		printf("%c",data[i]);
-	printf("\n");
-}
-
 void SPE_Start_Send(void)//数据包开始
 {
 	SPE_SIndex = 0;
@@ -208,12 +187,4 @@ void SPE_Receive_Bytes(uint8_t *bytes, uint16_t length)//串口接收数据调�
 {
 	uint16_t i;
 	for(i = 0; i < length; i ++) SPE_Receive_Byte(bytes[i]);
-}
-
-__weak int main()//测试代码
-{
-	uint8_t hello[]="Hello world!";
-	SPE_Start_Send();
-	SPE_Bytes_Send(hello, strlen(hello));
-	SPE_End_Send();
 }
