@@ -1,17 +1,10 @@
-新版spe
-新版每256字节数据密度是87%，旧版只有75%。
+spe
+============
+This is a design of the data link layer protocol for serial port.
+Principle of protocol：
+----------------------
+Split the original data by bits, Insert 1-2 control bits packaged into new data.
+For example, The original data in binary representation: AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD
+new data: 10AAAAAA 0AABBBBB 0BBBCCCC 0CCCCDDD 11DDDDD0
 
-这是一个数据封包协议，或者叫做数据成帧协议，通常用于串口通讯或socket传输文件
-
-举个例子说明一下协议功能：把自行车，摩托车，汽车分别拆成零件打包发给不同的人，保证每个人收到以后能组装成完整地自行车，摩托车，汽车。而不会和其他人的零件混合。
-
-协议原理：把每个字节8位拆开，帧开始和结束时每次传送6位，其他时候每次传送7位。
-打包后的数据开始和结束时每个字节包含2位帧控制和6位数据，中间数据包含1位控制位和7位数据。
-
-例如发送4个字节，按位表示 AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDD
-
-打包后数据：10AAAAAA 0AABBBBB 0BBBCCCC 0CCCCDDD 11DDDDD0
-
-bus.c是本协议的一个简单应用，用来代替ModBus（这只是一个简单例子，要代替ModBus还需要加入CRC校验，总线争抢，数据类型等功能。由于其他原因这部分代码暂不开源。）
-本协议与ModBus比较，比ASCII模式数据密度更大 7/8 > 4/8，不需要RTU模式的等待时间，数据也不容易错位，在单片机中需要更少的资源就能实现。
-本协议也可以作为ModBus的第三种模式加入ModBus中
+bus.c is a demo
