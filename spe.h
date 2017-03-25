@@ -36,6 +36,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	void SPE_Byte_Send(uint8_t bits);//发送一个字节
 	void SPE_End_Send(void);//数据包结束
 	void SPE_Bytes_Send(uint8_t *bytes, uint16_t length);//发送多个字节,SPE_Byte_Send的多字节版
+
+	void SPE_Send_Packet(uint8_t *data, uint16_t length);//另一种发送方式，必须单独使用
+	
 	void SPE_Receive_Byte(uint8_t byte);//串口接收一个字节调用一次本函数
 	void SPE_Receive_Bytes(uint8_t *bytes, uint16_t length);//串口接收数据调用本函数,SPE_Receive_Byte的多字节版
 #endif //__SPE_4638_H__

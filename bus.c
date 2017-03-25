@@ -78,7 +78,7 @@ void SendString(uint8_t index, const char *str)//发送字符串
 
 int main()//测试代码
 {
-	uint8_t hello[]="Hello world!";
+	uint8_t hello[]="3Hello world!";
 	SendValue(1, 3);
 	SendValue(2, -1);
 	SendString(3, hello);
