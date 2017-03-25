@@ -12,3 +12,5 @@ For example, The original data in binary representation: AAAAAAAA BBBBBBBB CCCCC
 new data: 10AAAAAA 0AABBBBB 0BBBCCCC 0CCCCDDD 11DDDDD0
 
 bus.c is a demo
+
+[中文版](https://git.oschina.net/badlyby/spe)
