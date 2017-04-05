@@ -30,13 +30,13 @@ void SendByte(uint8_t byte)//测试代码 把发送出去的数据发送给接�
 }
 
 #ifndef SPE_RAMLessMode
-void SendBytes(uint8_t *bytes, uint16_t length)//测试代码 把发送出去的数据发送给接收函数
+void SendBytes(uint8_t *bytes, uint32_t length)//测试代码 把发送出去的数据发送给接收函数
 {
 	SPE_Receive_Bytes(bytes, length);
 }
 #endif
 
-void SPE_ProcessData(uint8_t *data, uint16_t length)//接收到的数据
+void SPE_ProcessData(uint8_t *data, uint32_t length)//接收到的数据
 {
 	uint8_t idx = data[0];
 	int32_t *val = data + 1;
@@ -78,7 +78,7 @@ void SendString(uint8_t index, const char *str)//发送字符串
 
 int main()//测试代码
 {
-	uint8_t hello[]="3Hello world!";
+	uint8_t hello[]="Hello world!";
 	SendValue(1, 3);
 	SendValue(2, -1);
 	SendString(3, hello);
