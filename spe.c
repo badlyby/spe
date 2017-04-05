@@ -24,11 +24,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "spe.h"
 
 #ifndef SPE_RAMLessMode
-volatile static uint16_t SPE_Scount;
-volatile static uint8_t SPE_Sbuf[(SPE_MAX_PacketLength+3)/7*8+1];
+volatile static uint32_t SPE_Scount;
+static uint8_t SPE_Sbuf[(SPE_MAX_PacketLength+3)/7*8+1];
 #endif
 
-volatile static uint8_t SPE_Rbuf[SPE_MAX_PacketLength];
+static uint8_t SPE_Rbuf[SPE_MAX_PacketLength];
 volatile static uint8_t SPE_TmpBits = 0;
 volatile static uint8_t SPE_LBits = 0;
 volatile static uint8_t SPE_Begin = 0;
@@ -105,16 +105,16 @@ void SPE_End_Send(void)//数据包结束
 	}
 }
 
-void SPE_Bytes_Send(uint8_t *bytes, uint16_t length)//发送多个字节,SPE_Byte_Send的多字节版
+void SPE_Bytes_Send(uint8_t *bytes, uint32_t length)//发送多个字节,SPE_Byte_Send的多字节版
 {
-	uint16_t i;
+	uint32_t i;
 	for(i=0;i<length;i++)
 		SPE_Byte_Send(bytes[i]);
 }
 
-void SPE_Send_Packet(uint8_t *data, uint16_t length)
+void SPE_Send_Packet(uint8_t *data, uint32_t length)
 {
-	uint16_t idx = 0;
+	uint32_t idx = 0;
 #ifndef SPE_RAMLessMode
 	SPE_Scount = 0;
 #endif
@@ -165,16 +165,19 @@ void SPE_Send_Packet(uint8_t *data, uint16_t length)
 void SPE_Receive_Byte(uint8_t byte)//串口接收一个字节调用一次本函数
 {
 	static volatile uint8_t ridx = 4;
-	static volatile uint16_t rcount = 0;
+	static volatile uint32_t rcount = 0;
 	static volatile uint8_t rbits = 0;
+	static volatile uint8_t frame_start = 0;
 	if((byte & 0xC0) == 0x80)
 	{
+		frame_start = 1;
 		rcount = 0;
 		SPE_Rbuf[rcount] = (byte & 0x3F) << 2;
 		rbits = 6;
 	}
 	else if((byte & 0xC0) == 0xC0)
 	{
+		if(frame_start == 0) return;
 		if(rbits != 8)
 		{
 			if(rcount >= SPE_MAX_PacketLength) return;
@@ -182,11 +185,13 @@ void SPE_Receive_Byte(uint8_t byte)//串口接收一个字节调用一次本函�
 			rcount ++;
 		}
 		SPE_ProcessData(SPE_Rbuf, rcount);
+		frame_start = 0;
 		rcount = 0;
 		rbits = 8;
 	}
 	else
 	{
+		if(frame_start == 0) return;
 		if(rbits == 1)
 		{
 			SPE_Rbuf[rcount] |= byte & 0x7F;
@@ -207,8 +212,8 @@ void SPE_Receive_Byte(uint8_t byte)//串口接收一个字节调用一次本函�
 	}
 }
 
-void SPE_Receive_Bytes(uint8_t *bytes, uint16_t length)//串口接收数据调用本函数,SPE_Receive_Byte的多字节版
+void SPE_Receive_Bytes(uint8_t *bytes, uint32_t length)//串口接收数据调用本函数,SPE_Receive_Byte的多字节版
 {
-	uint16_t i;
+	uint32_t i;
 	for(i = 0; i < length; i ++) SPE_Receive_Byte(bytes[i]);
 }
